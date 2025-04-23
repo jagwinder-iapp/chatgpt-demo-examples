@@ -13,6 +13,8 @@ struct ChatView: View {
     
     var body: some View {
         VStack {
+            modelPicker()
+                .padding(.horizontal)
             if viewModel.messages.isEmpty {
                 emptyChatPlaceholder()
             } else {
@@ -21,7 +23,6 @@ struct ChatView: View {
                     .background(Color(UIColor.secondarySystemBackground))
             }
             messageInputBar()
-                .background(Color(UIColor.systemBackground))
         }
     }
     
@@ -35,20 +36,26 @@ struct ChatView: View {
         }
     }
     
+    private func modelPicker() -> some View {
+        Picker("Model", selection: $viewModel.selectedModel) {
+            ForEach(viewModel.availableModels, id: \.self) { model in
+                Text(model).tag(model)
+            }
+        }
+        .pickerStyle(SegmentedPickerStyle())
+    }
+    
     private func chatScrollView() -> some View {
         ScrollViewReader { proxy in
             ScrollView {
-                VStack(alignment: .leading, spacing: 10) {
-                    ForEach(viewModel.messages) { message in
-                        messageBubble(for: message)
-                            .id(message.id)
-                    }
-                }
-                .padding()
+                ForEach(viewModel.messages) { message in
+                    messageBubble(for: message)
+                        .id(message.id)
+                }.padding()
             }
-            .onChange(of: viewModel.messages.count) { _ in
+            .onChange(of: viewModel.messages.last?.text, perform: { _ in
                 scrollToBottom(proxy: proxy, animated: true)
-            }
+            })
             .onAppear {
                 scrollToBottom(proxy: proxy, animated: false)
             }
@@ -83,22 +90,21 @@ struct ChatView: View {
                     .foregroundColor(.white)
                     .clipShape(Circle())
                     .shadow(radius: 3)
-            }
+            }.disabled(viewModel.isTyping)
         }
         .padding()
-        .background(Color(UIColor.systemBackground))
     }
     
     private func scrollToBottom(proxy: ScrollViewProxy, animated: Bool) {
         if let lastMessage = viewModel.messages.last {
             if animated {
                 withAnimation {
-                    proxy.scrollTo(lastMessage.id, anchor: .top)
+                    proxy.scrollTo(lastMessage.id, anchor: .bottom)
                 }
             } else {
-                proxy.scrollTo(lastMessage.id, anchor: .top)
+                proxy.scrollTo(lastMessage.id, anchor: .bottom)
             }
         }
     }
+    
 }
-

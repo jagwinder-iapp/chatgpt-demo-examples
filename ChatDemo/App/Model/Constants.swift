@@ -6,5 +6,6 @@
 //
 
 struct Constants{
-    static let apiKey = "YOUR_API_KEY"
+    static let openAIKey = "YOUR_API_KEY"
+    static let perplexityKey = "YOUR_PERPLEXITY_KEY"
 }

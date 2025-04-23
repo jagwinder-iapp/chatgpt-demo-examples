@@ -9,6 +9,6 @@ import Foundation
 
 struct Message: Codable, Identifiable {
     var id = UUID()
-    let text: String
+    var text: String
     let isUser: Bool
 }
