@@ -1,38 +1,50 @@
 # ChatGPT SwiftUI Demo App
 
 ## Overview
-This is a simple chat application built using SwiftUI that interacts with OpenAI's GPT model to generate responses. The app allows users to send messages and receive AI-generated replies while maintaining a conversation history.
+A sleek SwiftUI-based chat application that leverages OpenAI's GPT and Perplexity AI models to generate intelligent responses. It supports real-time streaming replies and retains conversation history for a seamless user experience.
 
 ## Features
-- User-friendly chat interface
-- Integration with OpenAI API for AI-generated responses
-- Persistent chat history using `UserDefaults`
-- Message bubbles for both user and AI messages
-- Auto-scrolling to the latest message
+- ✨ Real-time streaming responses (token-by-token)
+- 🧠 Supports multiple models: `gpt-4o-mini`, `gpt-4o`, and `perplexity`
+- 💬 Clean and intuitive chat UI with message bubbles
+- 💾 Persistent chat history using `UserDefaults`
+- ⬇️ Auto-scrolls to latest message
+- 🔄 Model switcher for dynamic API usage
 
 ## Technology Stack
-- **Swift**: Core language used for development
-- **SwiftUI**: UI framework for building the chat interface
-- **Combine**: Used for handling asynchronous API requests and state management
-- **UserDefaults**: For local storage of chat history
-- **URLSession**: For making network requests to OpenAI API
+- **Swift** – Core programming language
+- **SwiftUI** – Declarative UI framework
+- **Combine** – State management & reactive updates
+- **UserDefaults** – Simple local storage
+- **URLSession** – Streamed HTTP requests to APIs
 
 ## Setup Instructions
 1. Clone the repository.
 2. Open the project in Xcode.
-3. ⚠️ **Replace `YOUR_API_KEY` in `Constants.swift` with your OpenAI API key. This is mandatory!** ⚠️  
-4. Build and run the app on a simulator or device.
+3. ⚠️ **Update `Constants.swift` with your API keys**:
+   - Replace `YOUR_API_KEY` with your OpenAI key.
+   - Replace `YOUR_PERPLEXITY_KEY` with your Perplexity API key.
+4. Build and run the app on a device or simulator.
 
 ## API Usage
-The app sends a `POST` request to OpenAI's API with the user input and receives a response:
+The app sends a streamed `POST` request to either OpenAI or Perplexity API, depending on the selected model:
+
 ```swift
 let body: [String: Any] = [
-    "model": "gpt-4o-mini",
-    "messages": [["role": "user", "content": message]],
-    "temperature": 0.7
+    "model": selectedModel == "perplexity" ? "sonar-pro" : selectedModel,
+    "messages": recentMessages,
+    "temperature": 0.7,
+    "stream": true
 ]
 ```
-The response is parsed and displayed in the chat UI.
+
+### Supported Models
+- `gpt-4o-mini` (default)
+- `gpt-4o`
+- `perplexity` (uses `sonar-pro` under the hood)
+
+### Streaming
+Streaming responses are handled chunk-by-chunk using `URLSessionDataDelegate`, making the AI feel more responsive and dynamic.
 
 ## License
-This project is open-source and available for personal and educational use.
+Open-source and available for personal or educational use. Contributions welcome!
