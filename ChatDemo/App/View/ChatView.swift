@@ -37,12 +37,22 @@ struct ChatView: View {
     }
     
     private func modelPicker() -> some View {
-        Picker("Model", selection: $viewModel.selectedModel) {
+        Menu {
             ForEach(viewModel.availableModels, id: \.self) { model in
-                Text(model).tag(model)
+                Button(action: { viewModel.selectedModel = model }) {
+                    Label(model, systemImage: viewModel.selectedModel == model ? "checkmark" : "")
+                }
             }
+        } label: {
+            HStack {
+                Text("Model: \(viewModel.selectedModel)")
+                    .foregroundColor(.primary)
+                Image(systemName: "chevron.down")
+            }
+            .padding()
+            .background(Color(UIColor.secondarySystemBackground))
+            .clipShape(RoundedRectangle(cornerRadius: 10))
         }
-        .pickerStyle(SegmentedPickerStyle())
     }
     
     private func chatScrollView() -> some View {

@@ -19,9 +19,18 @@ class ChatViewModel: NSObject, ObservableObject, URLSessionDelegate, URLSessionD
     @Published var inputText: String = ""
     @Published var isTyping: Bool = false
     @Published var isUserAtBottom = true
-    @Published var selectedModel: String = "gpt-4o-mini"
+    @Published var selectedModel: String = "gpt-4.1-nano"
     
-    let availableModels = ["gpt-4o-mini", "gpt-4o", "perplexity"]
+    let availableModels = [
+        "gpt-4.1-nano",
+        "gpt-4o-mini",
+        "gpt-4o",
+        "gpt-4",
+        "gpt-4.1",
+        "gpt-4.1-mini",
+        "perplexity"
+    ]
+    
     private let userDefaultsKey = "chatMessages"
     private var currentAssistantMessageID: UUID?
     
